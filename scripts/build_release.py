@@ -172,7 +172,9 @@ def optimize_images():
             else:
                 im.load()
                 im = resize_to_fit(im, target_for(rel, im.size))
-                im.save(path, "PNG", optimize=True, compress_level=9)
+                tmp = path.with_suffix(".tmp.png")
+                im.save(tmp, "PNG", optimize=True, compress_level=9)
+                tmp.replace(path)
 
 def circular_loop(src, dst, start, length, crossfade=2.0, bitrate="96k"):
     # Circular crossfade: output starts after the head, ends with tail->head crossfade,
