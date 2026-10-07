@@ -393,12 +393,12 @@ function install(){
     let save=Campaign.read();
     const coinPanel=fit(this.add.image(300,77,'pcoins'),380,104).setDepth(18).setInteractive({useHandCursor:true});
     fit(this.add.image(190,77,'ui_coin'),48,48).setDepth(20);
-    this.coinText=label(310,77,String(save.coins||0),32);
+    this.coinText=label(310,77,String(save.coins||0),32);label(410,77,'+',32);
     coinPanel.disableInteractive();
     this.add.zone(coinPanel.x+coinPanel.displayWidth*.39,coinPanel.y,coinPanel.displayWidth*.22,coinPanel.displayHeight*.9).setDepth(21).setInteractive({useHandCursor:true}).on('pointerdown',()=>this.openPaidShop());
     const lifePanel=fit(this.add.image(1610,77,'plives'),380,104).setDepth(18).setInteractive({useHandCursor:true});
     fit(this.add.image(1505,77,'potion_life-heart'),54,54).setDepth(20);
-    this.lifeText=label(1627,77,String(Campaign.read().lives),32);
+    this.lifeText=label(1627,77,String(Campaign.read().lives),32);label(1720,77,'+',32);
     const clockX=1610,clockY=172;
     this.lifeClockPanel=fit(this.add.image(clockX,clockY,'time_panel'),340,112).setDepth(17);
     this.lifeClock=label(clockX+this.lifeClockPanel.displayWidth*.11,clockY+this.lifeClockPanel.displayHeight*.04,'',21);

@@ -164,7 +164,7 @@ def resize_to_fit(image, target):
 def optimize_images():
     for rel in ASSET_FILES:
         path = RELEASE / rel
-        with Image.open(path) as im:
+        with Image.open(ROOT / rel) as im:
             if path.suffix.lower() in {".jpg", ".jpeg"}:
                 # Full-screen backgrounds remain 1920x1080; only excess pixels/metadata are removed.
                 im = im.convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
@@ -172,9 +172,7 @@ def optimize_images():
             else:
                 im.load()
                 im = resize_to_fit(im, target_for(rel, im.size))
-                tmp = path.with_suffix(".tmp.png")
-                im.save(tmp, "PNG", optimize=True, compress_level=9)
-                tmp.replace(path)
+                im.save(path, "PNG", optimize=True, compress_level=9)
 
 def circular_loop(src, dst, start, length, crossfade=2.0, bitrate="96k"):
     # Circular crossfade: output starts after the head, ends with tail->head crossfade,
