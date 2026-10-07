@@ -241,14 +241,15 @@ class Boot extends Phaser.Scene{
     this.load.audio('music_victory_accent','audio/music/accents/victory.mp3');
     const I=(k,p)=>this.load.image(k,p+'?v=potion-20261007');
     I('head_boosters','assets/ui/panels/panel_head_boosters.png');I('panel_king_shop','assets/ui/panels/panel_king_shop.png');I('royal_family_soon','assets/ui/buttons/button_royal_family_soon.png');I('hero_stump_forest','assets/ui/decor/hero_stump_forest.png');
-    I('goals_panel_new','assets/ui/panels/panel22.png');I('shop_plaque_new','assets/ui/panels/panel23.png');I('coin_shop_new','assets/ui/panels/popup33.png');
+    I('goals_panel_new','assets/ui/potion/goals-panel.png');I('shop_plaque_new','assets/ui/panels/panel23.png');I('coin_shop_new','assets/ui/panels/popup33.png');
+    ['board-frame','goals-panel','goals-mobile-panel','moves-panel','resource-plaque','booster-button','life-heart','cat-idle'].forEach(x=>I('potion_'+x,'assets/ui/potion/'+x+'.png'));
     I('map_level_panel','assets/ui/panels/panel_level.png');I('time_panel','assets/ui/panels/panel_time.png');
     I('wood_flat','assets/ui/panels/panel_3.png');
-    I('title','assets/backgrounds/pk_cab.jpg');I('gamebg','assets/backgrounds/pk_level_2.jpg');I('mapbg','assets/backgrounds/pk_map.jpg');I('logo','assets/ui/panels/logo_main.png');I('plevel','assets/ui/panels/panel_level_title.png');I('pgoals','assets/ui/panels/panel_goals.png');I('pboost','assets/ui/panels/panel_boosters.png');I('plives','assets/ui/panels/panel_lives.png');I('pcoins','assets/ui/panels/panel_coins.png');I('btn','assets/ui/buttons/button_wood.png');
+    I('title','assets/backgrounds/pk_cab.jpg');I('gamebg','assets/backgrounds/pk_level_2.jpg');I('mapbg','assets/backgrounds/pk_map.jpg');I('logo','assets/ui/panels/logo_main.png');I('plevel','assets/ui/panels/panel_level_title.png');I('pgoals','assets/ui/panels/panel_goals.png');I('pboost','assets/ui/panels/panel_boosters.png');I('plives','assets/ui/potion/resource-plaque.png');I('pcoins','assets/ui/potion/resource-plaque.png');I('btn','assets/ui/buttons/button_wood.png');
     I('popup_win','assets/ui/popups/popup_level_win.png');I('popup_lose','assets/ui/popups/popup_level_lose.png');
     I('popup_royal_shop','assets/ui/popups/popup_shop_main.png');
     I('level_done_new','assets/ui/buttons/level_completed5.png');I('level_current_new','assets/ui/buttons/level_current7.png');I('level_locked_new','assets/ui/buttons/level_completed7.png');
-    I('map_header_levels','assets/map/map_header_levels.png');['idle','point','celebrate','sad'].forEach(x=>I('king_'+x,'assets/characters/king/king_'+x+'.png'));
+    I('map_header_levels','assets/map/map_header_levels.png');['idle','point','celebrate','sad'].forEach(x=>I('king_'+x,'assets/ui/potion/cat-idle.png'));
     I('ice1','assets/blockers/ice.png');I('ice2','assets/blockers/ice_hard.png');I('acorn','assets/blockers/crystal_3hp.png');I('crystal_2','assets/blockers/crystal_2hp.png');I('crystal_1','assets/blockers/crystal_1hp.png');I('roots','assets/blockers/runa.png');
     I('line_h','assets/specials/pulya_goriz.png');I('line_v','assets/specials/pulya_vertik.png');I('rainbow','assets/specials/amulet.png');I('bombsp','assets/specials/bomb.png');
     I('hammer','assets/boosters/molotok.png');I('shuffle','assets/boosters/vihr.png');I('fan','assets/boosters/talisman.png');['back','coin','settings'].forEach(x=>I('ui_'+x,'assets/ui/icons/ui_'+x+'.png'));TYPES.forEach((x,i)=>I('b_'+x,'assets/berries/retorta_'+['fire','air','moon','flora','star','sun'][i]+'.png'));
@@ -335,6 +336,7 @@ class Play extends Phaser.Scene{
     return {idle:'king_idle',blink:'king_idle',happy:'king_point',point:'king_point',celebrate:'king_celebrate',sad:'king_sad'}[state]||'king_idle';
   }
   startKingBlink(){
+    return; // Cat uses gentle breathing; old king eyelid coordinates do not match.
     this._kingBlinkTimer?.remove?.(false);
     const schedule=()=>{
       if(!this.scene?.isActive?.()||!this.king)return;

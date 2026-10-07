@@ -371,12 +371,12 @@ function install(){
   p.hud=function hudDesigned(){
     // Board stays in its proven position; only the visual shell is rebuilt.
     const frame=this.add.graphics().setDepth(1);
-    frame.fillStyle(0xfff5e6,.62);frame.fillRoundedRect(BX-20,BY-20,C*CELL+40,R*CELL+40,28);
-    frame.lineStyle(5,0xd5aa62,.82);frame.strokeRoundedRect(BX-20,BY-20,C*CELL+40,R*CELL+40,28);
+    frame.fillStyle(0x081b39,.94);frame.fillRoundedRect(BX-12,BY-12,C*CELL+24,R*CELL+24,20);
     for(let r=0;r<R;r++)for(let c=0;c<C;c++){
-      frame.fillStyle((r+c)%2?0xf3e6d2:0xfffaf0,.42);
-      frame.fillRoundedRect(BX+c*CELL+5,BY+r*CELL+5,CELL-10,CELL-10,15);
+      frame.fillStyle((r+c)%2?0x173755:0x204465,.48);
+      frame.fillRoundedRect(BX+c*CELL+3,BY+r*CELL+3,CELL-6,CELL-6,12);
     }
+    fit(this.add.image(BX+C*CELL/2,BY+R*CELL/2,'potion_board-frame'),C*CELL/0.87,R*CELL/0.87).setDepth(2);
 
     const label=(x,y,value,size=30,color='#fff4cf')=>this.add.text(x,y,value,{fontFamily:FONT,fontSize:size+'px',fontStyle:'bold',color,stroke:color==='#57301d'?'#fff4d5':'#63351e',strokeThickness:color==='#57301d'?1:5,align:'center'}).setOrigin(.5).setDepth(20);
     const wood=(x,y,w,h)=>fit(this.add.image(x,y,'wood_flat'),w,h).setDepth(17);
@@ -392,11 +392,13 @@ function install(){
     label(960,70,`УРОВЕНЬ ${this.no}`,42);
     let save=Campaign.read();
     const coinPanel=fit(this.add.image(300,77,'pcoins'),380,104).setDepth(18).setInteractive({useHandCursor:true});
-    this.coinText=label(310,77,String(save.coins||0),32,'#57301d');
+    fit(this.add.image(190,77,'ui_coin'),48,48).setDepth(20);
+    this.coinText=label(310,77,String(save.coins||0),32);
     coinPanel.disableInteractive();
     this.add.zone(coinPanel.x+coinPanel.displayWidth*.39,coinPanel.y,coinPanel.displayWidth*.22,coinPanel.displayHeight*.9).setDepth(21).setInteractive({useHandCursor:true}).on('pointerdown',()=>this.openPaidShop());
     const lifePanel=fit(this.add.image(1610,77,'plives'),380,104).setDepth(18).setInteractive({useHandCursor:true});
-    this.lifeText=label(1627,84,String(Campaign.read().lives),32,'#57301d');
+    fit(this.add.image(1505,77,'potion_life-heart'),54,54).setDepth(20);
+    this.lifeText=label(1627,77,String(Campaign.read().lives),32);
     const clockX=1610,clockY=172;
     this.lifeClockPanel=fit(this.add.image(clockX,clockY,'time_panel'),340,112).setDepth(17);
     this.lifeClock=label(clockX+this.lifeClockPanel.displayWidth*.11,clockY+this.lifeClockPanel.displayHeight*.04,'',21);
@@ -406,7 +408,7 @@ function install(){
     this.time.addEvent({delay:1000,loop:true,callback:()=>this.refreshLifeDisplay()});
     lifePanel.disableInteractive();
     this.add.zone(lifePanel.x+lifePanel.displayWidth*.39,lifePanel.y,lifePanel.displayWidth*.22,lifePanel.displayHeight*.9).setDepth(21).setInteractive({useHandCursor:true}).on('pointerdown',()=>this.openPaidShop());
-    wood(300,180,300,88);this.mt=label(300,180,'',29);
+    fit(this.add.image(300,195,'potion_moves-panel'),210,150).setDepth(17);this.mt=label(300,200,'',25,'#57301d');
     this.st=null;
     backOnly(72,74,()=>{window.BerriesYandex?.gameplayStop?.();this.scene.start('Map')});
     const shopButton=fit(this.add.image(1285,1016,'shop_plaque_new'),370,96).setDepth(17).setInteractive({useHandCursor:true});
@@ -460,7 +462,8 @@ function install(){
 
     // Fixed-size panels and slot centres in the 1920x1080 reference grid.
     const goalsPanel=fit(this.add.image(300,480,'goals_panel_new'),345,520).setDepth(3);
-    const slots=[.369,.553,.738];
+    label(300,goalsPanel.y-goalsPanel.displayHeight*.30,'ЦЕЛИ',29,'#57301d');
+    const slots=[.39,.56,.73];
     this.gt=this.goals.map((goal,index)=>{
       const y=goalsPanel.y+(slots[index]-.5)*goalsPanel.displayHeight;
       const key=goal.type==='berry'?'b_'+goal.id:goal.type==='ice'?'ice1':goal.type==='acorn'?'acorn':goal.type==='roots'?'roots':'ui_coin';
@@ -468,11 +471,13 @@ function install(){
       const value=label(goalsPanel.x+.16*goalsPanel.displayWidth,y,'',27,'#57301d');
       return value;
     });
-    fit(this.add.image(1610,570,'pboost'),280,650).setDepth(3);
-    const boosterHead=fit(this.add.image(1610,302,'head_boosters'),380,110).setDepth(20);
+    // Booster buttons are separate transparent PNG objects.
+    const boosterHead=fit(this.add.image(1610,302,'potion_resource-plaque'),380,110).setDepth(20);
     this.add.zone(1610+boosterHead.displayWidth*.338,302,70,70).setDepth(21).setInteractive({useHandCursor:true}).on('pointerdown',()=>this.openShop());
+    label(1610,302,'БУСТЕРЫ',28);
     this.boosterButtons={};
     [['hammer',441],['shuffle',582],['fan',722]].forEach(([id,y])=>{
+      fit(this.add.image(1610,y,'potion_booster-button'),152,152).setDepth(4);
       const im=fit(this.add.image(1610,y,id),96*TOUCH_SCALE,96*TOUCH_SCALE).setDepth(5).setInteractive({useHandCursor:true});
       this.add.circle(1660,y+39,24,0x237fbd,1).setStrokeStyle(3,0xffe9b0).setDepth(6);
       const tx=label(1660,y+39,'',24);tx.setDepth(7);
@@ -481,13 +486,13 @@ function install(){
     this.boosterHint=this.add.text(1610,920,'',{fontFamily:FONT,fontSize:'19px',fontStyle:'bold',align:'center',color:'#fff1c9',stroke:'#4b2915',strokeThickness:4,wordWrap:{width:330}}).setOrigin(.5).setDepth(6);
 
     // Hero corner: production art assets. No procedural placeholder geometry.
-    const stump=fit(this.add.image(300,1010,'hero_stump_forest'),390,273).setDepth(4);
+    // Cat is isolated; no old stump decoration.
     this.king=fit(this.add.image(300,830,'king_idle'),350,350).setDepth(7);
     this.kingBaseX=300;this.kingBaseY=830;this.kingBaseScale=this.king.scaleX;
     this.startKingBlink?.();
 
     // Royal Family stays visible as a beautiful coming-soon element, but is intentionally non-interactive.
-    fit(this.add.image(1765,980,'royal_family_soon'),280,196).setDepth(18);
+    // Old berry royal-family artwork removed from the potion HUD.
 
 
   };

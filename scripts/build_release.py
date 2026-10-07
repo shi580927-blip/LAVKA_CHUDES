@@ -28,6 +28,15 @@ RUNTIME_FILES = [
 ]
 
 ASSET_FILES = [
+    "assets/ui/potion/cat-idle.png",
+    "assets/ui/potion/moves-panel.png",
+    "assets/ui/potion/life-heart.png",
+    "assets/ui/potion/goals-mobile-panel.png",
+    "assets/ui/potion/board-frame.png",
+    "assets/ui/potion/resource-plaque.png",
+    "assets/ui/potion/goals-panel.png",
+    "assets/ui/potion/booster-button.png",
+
     "assets/backgrounds/pk_level_2.jpg",
     "assets/backgrounds/pk_cab.jpg",
     "assets/backgrounds/pk_map.jpg",
@@ -161,6 +170,7 @@ def optimize_images():
                 im = im.convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
                 im.save(path, "JPEG", quality=82, optimize=True, progressive=True)
             else:
+                im.load()
                 im = resize_to_fit(im, target_for(rel, im.size))
                 im.save(path, "PNG", optimize=True, compress_level=9)
 
