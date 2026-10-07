@@ -558,7 +558,7 @@ function install(){
     const coins=text(...at(.635,.33),'',24),message=text(...at(.5,.92),'Бустеры сохраняются\nмежду уровнями',18);message.setLineSpacing(0);box.add([coins,message]);
     const counts=[];
     const refresh=()=>{const state=Campaign.read();coins.setText('МОНЕТЫ\n'+state.coins);counts.forEach(([id,title,t])=>t.setText(title+'\nВ запасе: '+state.inventory[id]));if(this.inventory)this.inventory={...state.inventory};this.refreshBoosters?.()};
-    [['hammer','Молоток'],['shuffle','Перемешивание'],['fan','Вентилятор']].forEach(([id,title],i)=>{
+    [['hammer','Молоток'],['shuffle','Вихрь трансмутации'],['fan','Печать очищения']].forEach(([id,title],i)=>{
       const v=[.473,.632,.792][i];
       const count=text(...at(.465,v),'',22);counts.push([id,title,count]);box.add(count);
       const buy=this.add.zone(...at(.775,v),panel.displayWidth*.25,panel.displayHeight*.085).setInteractive({useHandCursor:true});
@@ -582,7 +582,7 @@ function install(){
     const infoText=this.add.text(X(win?.675:.692),Y(win?.525:.52),'',{
       fontFamily:FONT,fontSize:'29px',fontStyle:'bold',color:'#59331d',align:'center',wordWrap:{width:art.displayWidth*.39}
     }).setOrigin(.5);box.add(infoText);
-    const names={strawberry:'Клубника',raspberry:'Малина',blueberry:'Черника',gooseberry:'Крыжовник',blackberry:'Ежевика',cloudberry:'Морошка',ice:'Лёд',roots:'Корни',acorn:'Жёлуди',score:'Очки'};
+    const names={strawberry:'Огонь',raspberry:'Туман',blueberry:'Луна',gooseberry:'Лес',blackberry:'Звёзды',cloudberry:'Солнце',ice:'Лёд',roots:'Руны',acorn:'Кристаллы',score:'Очки'};
     const refreshInfo=()=>{
       if(win){const reward=Campaign.read().lastWin;infoText.setText('Награда\n'+(reward?.id===this.attemptId?reward.reward*(reward.doubled?2:1):0)+' монет')}
       else infoText.setText('Осталось собрать\n'+this.goals.map(g=>({g,left:Math.max(0,g.need-(g.type==='score'?Math.round(this.score):g.done))})).filter(q=>q.left>0).map(q=>(names[q.g.id||q.g.type]||'Цель')+': '+q.left).join('\n'));
