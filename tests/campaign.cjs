@@ -4,6 +4,7 @@ let time=1e6;const mem={berries_vs_04:JSON.stringify({done:[1,6,11,16,21,30],coi
 assert.equal(Object.keys(LEVELS).length,30);
 for(const [n,l] of Object.entries(LEVELS)){
 const blocked=new Set([...l.root,...l.ac].map(x=>x.join(',')));assert.equal(blocked.size,l.root.length+l.ac.length);
+assert(l.ice.every(([y,x])=>!l.ac.some(([ay,ax])=>ay===y&&ax===x)),'crystals must stay outside ice '+n);
 for(const p of [...l.ice,...l.root,...l.ac])assert(p[0]>=0&&p[0]<8&&p[1]>=0&&p[1]<8);
 for(const [type,id,need] of l.g){if(type==='ice')assert(need<=l.ice.length,'ice '+n);if(type==='roots')assert(need<=l.root.length);if(type==='acorn')assert(need<=l.ac.length)}
 }

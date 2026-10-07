@@ -34,8 +34,8 @@ const rows=[
 [24,6,goals(ice(12),ac(6),roots(8)),12,'mixed',6,8]
 ];
 const LEVELS=Object.fromEntries(rows.map((row,i)=>{
-const [m,n,g,ic=0,h=1,a=0,r=0,frozenAc=0]=row;
-return [i+1,{m,n,g,ice:[...iceSlots.slice(0,ic).map(([y,x],k)=>[y,x,h==='mixed'?(k%3===0?2:1):h]),...acSlots.slice(0,frozenAc).map(([y,x])=>[y,x,1])],ac:acSlots.slice(0,a).map(x=>x.slice()),root:rootSlots.slice(0,r).map(x=>x.slice())}];
+const [m,n,g,ic=0,h=1,a=0,r=0]=row;
+return [i+1,{m,n,g,ice:[...iceSlots,...Array.from({length:64},(_,k)=>[Math.floor(k/8),k%8]).filter(([y,x])=>!iceSlots.some(([iy,ix])=>iy===y&&ix===x))].filter(([y,x])=>!acSlots.slice(0,a).some(([ay,ax])=>ay===y&&ax===x)).slice(0,ic).map(([y,x],k)=>[y,x,h==='mixed'?(k%3===0?2:1):h]),ac:acSlots.slice(0,a).map(x=>x.slice()),root:rootSlots.slice(0,r).map(x=>x.slice())}];
 }));
 function create(storage,now=Date.now,cloud=()=>{}){
 const number=(v,f=0)=>Number.isFinite(Number(v))?Math.max(0,Math.floor(Number(v))):f;
