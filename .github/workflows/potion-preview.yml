@@ -25,6 +25,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install Pillow
+      - run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
       - run: python scripts/build_release.py
       - name: Prepare standalone preview
         run: |
