@@ -132,7 +132,7 @@ function install(){
  }
  const baseCreate=p.create;
  p.create=function(){
-  baseCreate.call(this);if(!this.attemptId||!this.scene.isActive())return;this.chainControls();
+  baseCreate.call(this);if(!this.attemptId)return;this.chainControls();
   if(this.no>=31){
    const hint=title(this,PORTRAIT?650:960,PORTRAIT?1740:980,this.cfg.chains?.length?'Нажми «КЛЮЧ», затем клетку с цепью.\nБесплатные ключи выданы на этот уровень.':'Руна загорается рядом с совпадением.\nДым исчезнет за 3 следующих хода.',PORTRAIT?25:23);
    hint.setWordWrapWidth(PORTRAIT?560:620);hint.setAlpha(.95);
