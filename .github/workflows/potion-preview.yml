@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 74416351b0ad6cbed4cb9432bdb8ecf2767bddce
+          ref: cee057dff680be4b441f4c0c31443f67ac190d7d
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -33,12 +33,12 @@ jobs:
           from pathlib import Path
           p = Path('release/index.html')
           s = p.read_text().replace('<script src="/sdk.js"></script>', '')
-          s = s.replace('<body>', '<body><div style="position:fixed;bottom:4px;left:8px;z-index:1000;color:white;background:#172638;padding:3px 8px;font:12px Arial;pointer-events:none">ТЕСТ: все 30 уровней открыты</div>')
+          s = s.replace('<body>', '<body><div style="position:fixed;bottom:4px;left:8px;z-index:1000;color:white;background:#172638;padding:3px 8px;font:12px Arial;pointer-events:none">ТЕСТ: все 50 уровней открыты</div>')
           p.write_text(s)
           c = Path('release/src/campaign.js')
           code = c.read_text()
           code = code.replace("berries_campaign_v1", "potion_preview_campaign_v1").replace("berries_vs_04", "potion_preview_legacy")
-          code = code.replace("function unlocked(s=read()){", "function unlocked(s=read()){return 30;")
+          code = code.replace("function unlocked(s=read()){", "function unlocked(s=read()){return 50;")
           code = code.replace("s.lives=Math.min(5,number(s.lives,5));", "s.lives=5;s.nextLifeAt=null;")
           c.write_text(code)
           Path('release/.nojekyll').touch()
