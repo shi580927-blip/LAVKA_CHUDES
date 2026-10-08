@@ -23,6 +23,7 @@
   <script src="src/campaign.js?v=mvp-20260918-combo26"></script>
 <script src="src/vertical_slice.js?v=mvp-20260918-combo26"></script>
 <script src="src/runtime_stable_v10.js?v=mvp-20260918-combo26"></script>
+<script src="src/potion_chapter.js?v=chapter-20261008"></script>
 <script>
 const field=document.getElementById('game-shell');
 for(const event of ['contextmenu','dragstart','selectstart'])field.addEventListener(event,e=>e.preventDefault());
@@ -44,8 +45,9 @@ for(const event of ['contextmenu','dragstart','selectstart'])field.addEventListe
     const host=shell.getBoundingClientRect();
     const actual=canvas.getBoundingClientRect();
     if(host.width<2||host.height<2||actual.width<2||actual.height<2)return false;
-    const expectedW=Math.min(host.width,host.height*16/9);
-    const expectedH=expectedW*9/16;
+    const ratio=(window.PotionLayout?.W||1920)/(window.PotionLayout?.H||1080);
+    const expectedW=Math.min(host.width,host.height*ratio);
+    const expectedH=expectedW/ratio;
     return Math.abs(actual.width-expectedW)<=4&&Math.abs(actual.height-expectedH)<=4;
   };
   const reveal=()=>{

@@ -37,6 +37,16 @@ const LEVELS=Object.fromEntries(rows.map((row,i)=>{
 const [m,n,g,ic=0,h=1,a=0,r=0]=row;
 return [i+1,{m,n,g,ice:[...iceSlots,...Array.from({length:64},(_,k)=>[Math.floor(k/8),k%8]).filter(([y,x])=>!iceSlots.some(([iy,ix])=>iy===y&&ix===x))].filter(([y,x])=>!acSlots.slice(0,a).some(([ay,ax])=>ay===y&&ax===x)).slice(0,ic).map(([y,x],k)=>[y,x,h==='mixed'?(k%3===0?2:1):h]),ac:acSlots.slice(0,a).map(x=>x.slice()),root:rootSlots.slice(0,r).map(x=>x.slice())}];
 }));
+// Two test chapters use authored, connected masks and modest blocker counts.
+const corners=[[0,0],[0,7],[7,0],[7,7]];
+const sides=[[2,0],[3,0],[4,0],[5,0],[2,7],[3,7],[4,7],[5,7]];
+for(let n=31;n<=50;n++){
+ const k=(n-31)%10,holes=k<2?[]:k%2===0?corners:sides;
+ const root=[[3,3],[4,4],[2,4],[5,3]].slice(0,k<2?1:k<5?2:3);
+ const ice=k>=4?[[1,2,1],[6,5,1]]:[];
+ const ac=k>=7?[[2,2],[5,5]]:[];
+ LEVELS[n]={m:k%5===4?30:26,n:5,g:[roots(root.length),...(ice.length?[['ice',null,ice.length]]:[]),...(ac.length?[['acorn',null,ac.length]]:[])],ice,ac,root,holes:holes.map(p=>p.slice())};
+}
 function create(storage,now=Date.now,cloud=()=>{}){
 const number=(v,f=0)=>Number.isFinite(Number(v))?Math.max(0,Math.floor(Number(v))):f;
 function write(s){s.updatedAt=now();storage.setItem(KEY,JSON.stringify(s));cloud(s);return s}
@@ -54,7 +64,7 @@ s={version:1,lifePolicy:2,done:[],coins:number(old?.coins),inventory:{hammer:2,s
 }
 // One-time compensation: old saves did not distinguish losses from exits.
 if(s.lifePolicy!==2){s.lives=MAX_LIVES;s.nextLifeAt=null;s.lifePolicy=2;write(s)}
-s.done=[...new Set((s.done||[]).filter(n=>Number.isInteger(n)&&n>=1&&n<=30))];
+s.done=[...new Set((s.done||[]).filter(n=>Number.isInteger(n)&&n>=1&&n<=50))];
 s.coins=number(s.coins);s.inventory??={};
 for(const id of Object.keys(PRICES))s.inventory[id]=number(s.inventory[id]);
 s.purchaseTokens=Array.isArray(s.purchaseTokens)?s.purchaseTokens.filter(x=>typeof x==='string').slice(-100):[];
@@ -69,7 +79,7 @@ const useRemote=!local||local.version!==1||remoteTime>localTime||(!remoteTime&&!
 if(useRemote){if(local)storage.setItem(KEY+'_before_cloud',JSON.stringify(local));const copy=JSON.parse(JSON.stringify(remote));copy.active=null;storage.setItem(KEY,JSON.stringify(copy))}
 return read();
 }
-function unlocked(s=read()){let n=1;const done=new Set(s.done);while(n<30&&done.has(n))n++;return n}
+function unlocked(s=read()){let n=1;const done=new Set(s.done);while(n<50&&done.has(n))n++;return n}
 function debit(s){s.lives=Math.max(0,s.lives-1);if(!s.nextLifeAt)s.nextLifeAt=now()+REGEN_MS}
 function abandon(token){const s=read();if(!s.active||(token&&s.active.id!==token))return s;s.active=null;return write(s)}
 function begin(n){

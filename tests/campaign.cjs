@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {LEVELS,create,REGEN_MS}=require('../src/campaign.js');
 let time=1e6;const mem={berries_vs_04:JSON.stringify({done:[1,6,11,16,21,30],coins:1500})};const storage={getItem:k=>mem[k]??null,setItem:(k,v)=>mem[k]=v};const api=create(storage,()=>time);
-assert.equal(Object.keys(LEVELS).length,30);
+assert.equal(Object.keys(LEVELS).length,50);
 for(const [n,l] of Object.entries(LEVELS)){
 const blocked=new Set([...l.root,...l.ac].map(x=>x.join(',')));assert.equal(blocked.size,l.root.length+l.ac.length);
 assert(l.ice.every(([y,x])=>!l.ac.some(([ay,ax])=>ay===y&&ax===x)),'crystals must stay outside ice '+n);
@@ -24,8 +24,8 @@ let balance=api.read().coins;assert(api.buy('fan'));assert.equal(api.read().coin
 for(let i=0;i<5;i++){const t=api.begin(1);assert(t);api.lose(t);api.abandon(t)}assert.equal(api.read().lives,0);assert.equal(api.begin(1),null);assert(api.addLife());assert(!api.addLife());assert.equal(create(storage,()=>time).read().inventory.hammer,1);
 while(api.buy('fan')){}const poor=api.read();assert(!api.buy('fan'));assert.equal(api.read().coins,poor.coins);
 time+=REGEN_MS*10;assert.equal(api.read().lives,5);
-for(let n=2;n<=30;n++){const t=api.begin(n);assert(t,'level '+n);assert(api.win(t));assert.equal(api.unlocked(),Math.min(30,n+1))}
-assert.equal(api.read().done.length,30);
+for(let n=2;n<=50;n++){const t=api.begin(n);assert(t,'level '+n);assert(api.win(t));assert.equal(api.unlocked(),Math.min(50,n+1))}
+assert.equal(api.read().done.length,50);
 (async()=>{
 const source=fs.readFileSync(path.join(__dirname,'../src/vertical_slice.js'),'utf8');
 const method=source.slice(source.indexOf('async clearCells'),source.indexOf('async fallRefill')).trim();
@@ -43,5 +43,5 @@ await clear.call(ctx,new Set(['0,1']));assert.equal(cell[0][1].ice,0);assert.equ
 await clear.call(ctx,new Set(['0,1']));assert.equal(acGoals,0);assert.equal(cell[0][1].crystalHp,2);
 await clear.call(ctx,new Set(['0,1','1,1']));assert.equal(acGoals,0);assert.equal(cell[0][1].crystalHp,1);
 await clear.call(ctx,new Set(['0,1']));assert.equal(acGoals,1);assert.equal(cell[0][1].block,null);
-console.log('PASS campaign economy, life accounting, 30 layouts and both ice layers');
+console.log('PASS campaign economy, life accounting, 50 layouts and both ice layers');
 })().catch(e=>{console.error(e);process.exitCode=1});

@@ -1,3 +1,9 @@
+## 2026-10-08: Rune smoke, chapters and portrait play
+
+Rune ignites on an adjacent match, transforms into a potion covered by the drawn smoke, and clears after three valid moves. Hidden potions stay pinned and cannot match until smoke clears. Rune goals count on clearing smoke. Levels 31–50 introduce connected corner-cut and side-notch masks. Five chapters use uploaded location backgrounds with chapter transitions. Portrait touch screens use a vertical field, goals, moves, boosters and result/shop panels. Preview unlocks all 50 levels; production progression stays gated.
+
+Validation: campaign, special-label-lifecycle, rewarded-guard and potion-chapter tests; JavaScript syntax checks; optimized release build.
+
 ## Подключение прозрачного UI — 08.10.2026
 - Игровой HUD использует отдельные PNG assets/ui/potion: квадратная рамка, панели целей/ходов, плашка ресурсов, кнопка бустера и рубиновое сердце.
 - Подложка и клетки рисуются Phaser отдельно от рамки; все надписи и счётчики — кодом.

@@ -15,6 +15,7 @@ OUTPUT = ROOT / os.environ.get("BERRIES_RELEASE_NAME", "berries_yandex_v6.zip")
 MANIFEST = ROOT / "berries_build_manifest.json"
 
 RUNTIME_FILES = [
+    "src/potion_chapter.js",
     "index.html",
     "styles.css",
     "assets/map-digits.css",
@@ -28,6 +29,20 @@ RUNTIME_FILES = [
 ]
 
 ASSET_FILES = [
+    "assets/backgrounds/pk_level_4.jpg",
+    "assets/backgrounds/pk_level_5.jpg",
+    "assets/backgrounds/pk_level_6.jpg",
+    "assets/backgrounds/pk_level_7.jpg",
+    "assets/backgrounds/mob_level_4.jpg",
+    "assets/backgrounds/mob_level_5.jpg",
+    "assets/backgrounds/mob_level_6.jpg",
+    "assets/backgrounds/mob_level_7.jpg",
+    "assets/backgrounds/mob_level_2.jpg",
+    "assets/blockers/runa_burning.png",
+    "assets/blockers/smog_1.png",
+    "assets/blockers/smog_2.png",
+    "assets/blockers/smog_3.png",
+
     "assets/ui/potion/cat-idle.png",
     "assets/ui/potion/moves-panel.png",
     "assets/ui/potion/life-heart.png",
@@ -143,6 +158,8 @@ def copy_one(rel):
     shutil.copy2(src, dst)
 
 def target_for(rel, size):
+    if rel.startswith("assets/ui/potion/"):
+        return {"cat-idle.png": (512,512), "life-heart.png": (192,192), "booster-button.png": (256,256), "moves-panel.png": (256,256), "resource-plaque.png": (512,192), "goals-panel.png": (512,768), "goals-mobile-panel.png": (768,256), "board-frame.png": (1024,1024)}.get(Path(rel).name, size)
     if rel.startswith(("assets/berries/", "assets/blockers/", "assets/boosters/", "assets/specials/")):
         return (256, 256)
     if rel.startswith("assets/characters/king/"):
@@ -167,7 +184,7 @@ def optimize_images():
         with Image.open(ROOT / rel) as im:
             if path.suffix.lower() in {".jpg", ".jpeg"}:
                 # Full-screen backgrounds remain 1920x1080; only excess pixels/metadata are removed.
-                im = im.convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
+                im = im.convert("RGB").resize((1080,1920) if "/mob_" in rel else (1920,1080), Image.Resampling.LANCZOS)
                 im.save(path, "JPEG", quality=82, optimize=True, progressive=True)
             else:
                 im.load()

@@ -2,9 +2,8 @@
 'use strict';
 
 const Campaign=window.BerriesCampaign;
-const W=1920,H=1080,R=8,C=8;
+const {W,H,R,C,CELL,BX,BY,PORTRAIT}=window.PotionLayout;
 const MOBILE_LAYOUT=!!(window.matchMedia?.('(pointer: coarse)').matches||window.navigator?.maxTouchPoints>0);
-const CELL=MOBILE_LAYOUT?110:96,BX=(W-C*CELL)/2,BY=MOBILE_LAYOUT?130:150;
 const TYPES=['strawberry','raspberry','blueberry','gooseberry','blackberry','cloudberry'];
 const TOUCH_SCALE=MOBILE_LAYOUT?1.35:1;
 const FONT='Arial Rounded MT Bold, Trebuchet MS, Arial, sans-serif';
@@ -271,7 +270,7 @@ function install(){
       this.spr[a.r][a.c]=B;this.spr[b.r][b.c]=A;
       if(A){A.setData('r',b.r);A.setData('c',b.c)}
       if(B){B.setData('r',a.r);B.setData('c',a.c)}
-      this.moves--;
+      this.moves--;this.advanceSmoke();
       const fire=new Set();
       if(sa)fire.add(`${b.r},${b.c}`);
       if(sb)fire.add(`${a.r},${a.c}`);
@@ -373,6 +372,7 @@ function install(){
     const frame=this.add.graphics().setDepth(1);
     frame.fillStyle(0x081b39,.94);frame.fillRoundedRect(BX-12,BY-12,C*CELL+24,R*CELL+24,20);
     for(let r=0;r<R;r++)for(let c=0;c<C;c++){
+      if(this.cell[r][c].block==='void')continue;
       frame.fillStyle((r+c)%2?0x173755:0x204465,.48);
       frame.fillRoundedRect(BX+c*CELL+3,BY+r*CELL+3,CELL-6,CELL-6,12);
     }
@@ -613,8 +613,8 @@ function install(){
         }else{area.setInteractive({useHandCursor:true});adStatus.setText('Реклама недоступна. Попробуй позже.')}
       });
       hit(.5,.899,.55,.13,()=>{
-        const next=this.no<30?this.no+1:null;
-        if(next)this.scene.start('Play',{n:next});else this.scene.start('Map');
+        const next=this.no<50?this.no+1:null;
+        if(next&&this.no%10!==0)this.scene.start('Play',{n:next});else this.scene.start('Map',{page:next?Math.floor(this.no/10):0});
       });
     }else{
       hit(.5,.697,.74,.16,async area=>{
