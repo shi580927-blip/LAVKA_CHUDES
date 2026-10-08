@@ -1,3 +1,11 @@
+## 2026-10-09: Closed doors replace chains
+
+User rejected chains and keys. Removed all chain goals, key buttons and key purchases. Levels 41–50 instead contain 1–4 permanent closed cupboard doors. Their cells contain no potion, cannot swap or match, stay fixed during gravity, shuffle and special hits, and do not consume a booster when tapped. Door taps shake the sprite and briefly show «Скоро». Gifts and opening are deliberately not implemented yet. Existing root/ice/crystal goals remain achievable, with connected authored masks.
+
+Asset: assets/blockers/door_closed.png, a transparent generated dark walnut door with a thin gold frame and small violet padlock. ImageGen prompt: one square front-view magical cupboard door, no chains, keys, potions or text. Runtime sprite optimized to 256 pixels. Mobile remains portrait.
+
+Validation: doors.cjs checks connected layouts, removal of chain goals and key economy, empty door cells, special-hit and booster protection; campaign and potion-chapter tests pass.
+
 ## 2026-10-08: Chains in chapter five
 
 Levels 41–50 add 1–4 chains over pinned potions, outside holes and other blockers. Each attempt receives one free key per chain. Select KEY and tap a chained cell: consume exactly one level key, preserve the potion, count the chain goal and resolve any resulting matches without consuming a move. Other boosters and special hits cannot remove chains. Extra keys cost 40 game coins, charged only on a successful purchase; keys are for the current attempt. Portrait and desktop controls are provided. Mobile layout is always portrait.
