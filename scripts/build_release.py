@@ -29,6 +29,7 @@ RUNTIME_FILES = [
 ]
 
 ASSET_FILES = [
+    "assets/blockers/cepi.png",
     "assets/backgrounds/pk_level_4.jpg",
     "assets/backgrounds/pk_level_5.jpg",
     "assets/backgrounds/pk_level_6.jpg",

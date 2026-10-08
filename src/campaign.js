@@ -47,6 +47,10 @@ for(let n=31;n<=50;n++){
  const ac=k>=7?[[2,2],[5,5]]:[];
  LEVELS[n]={m:k%5===4?30:26,n:5,g:[roots(root.length),...(ice.length?[['ice',null,ice.length]]:[]),...(ac.length?[['acorn',null,ac.length]]:[])],ice,ac,root,holes:holes.map(p=>p.slice())};
 }
+for(let n=41;n<=50;n++){
+ const level=LEVELS[n];level.chains=[[1,3],[6,4],[3,1],[4,6]].slice(0,Math.min(4,1+Math.floor((n-41)/3)));
+ level.g.push(['chain',null,level.chains.length]);
+}
 function create(storage,now=Date.now,cloud=()=>{}){
 const number=(v,f=0)=>Number.isFinite(Number(v))?Math.max(0,Math.floor(Number(v))):f;
 function write(s){s.updatedAt=now();storage.setItem(KEY,JSON.stringify(s));cloud(s);return s}
@@ -95,6 +99,7 @@ function win(token){const s=read();if(s.active?.id!==token)return false;const n=
 function doubleReward(token){const s=read();if(s.lastWin?.id!==token||s.lastWin.doubled)return false;s.coins+=s.lastWin.reward;s.lastWin.doubled=true;write(s);return true}
 function consume(id){const s=read();if(!PRICES[id]||s.inventory[id]<=0)return false;s.inventory[id]--;write(s);return true}
 function buy(id){const s=read(),price=PRICES[id];if(!price||s.coins<price)return false;s.coins-=price;s.inventory[id]++;write(s);return true}
+function buyKey(){const s=read();if(s.coins<40)return false;s.coins-=40;write(s);return true}
 function addLife(){const s=read();if(s.lives!==0)return false;s.lives=1;write(s);return true}
 function grantPurchase(productID,purchaseToken){
 const product=ROYAL_PRODUCTS[productID];if(!product||!purchaseToken)return {ok:false,reason:'unknown'};
@@ -105,7 +110,7 @@ if(product.boosters)for(const [id,count] of Object.entries(product.boosters))s.i
 s.purchaseTokens=[...s.purchaseTokens,purchaseToken].slice(-100);write(s);return {ok:true,duplicate:false,state:s};
 }
 function lifeLabel(){const s=read();if(s.lives===5)return '5 / 5';const sec=Math.max(0,Math.ceil((s.nextLifeAt-now())/1000));return s.lives+' / 5  • '+Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')}
-return {read,restore,unlocked,begin,abandon,lose,resume,win,doubleReward,consume,buy,addLife,grantPurchase,lifeLabel};
+return {read,restore,unlocked,begin,abandon,lose,resume,win,doubleReward,consume,buy,buyKey,addLife,grantPurchase,lifeLabel};
 }
 const api={KEY,LEVELS,PRICES,ROYAL_PRODUCTS,create,REGEN_MS};
 if(typeof module!=='undefined'&&module.exports)module.exports=api;

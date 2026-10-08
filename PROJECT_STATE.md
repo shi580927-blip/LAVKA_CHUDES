@@ -1,3 +1,9 @@
+## 2026-10-08: Chains in chapter five
+
+Levels 41–50 add 1–4 chains over pinned potions, outside holes and other blockers. Each attempt receives one free key per chain. Select KEY and tap a chained cell: consume exactly one level key, preserve the potion, count the chain goal and resolve any resulting matches without consuming a move. Other boosters and special hits cannot remove chains. Extra keys cost 40 game coins, charged only on a successful purchase; keys are for the current attempt. Portrait and desktop controls are provided. Mobile layout is always portrait.
+
+Validation: chains.cjs covers key economy, layout overlap, one-time unlock, potion preservation and special-hit protection; campaign, potion-chapter and special-label-lifecycle checks pass.
+
 ## 2026-10-08: Rune smoke, chapters and portrait play
 
 Rune ignites on an adjacent match, transforms into a potion covered by the drawn smoke, and clears after three valid moves. Hidden potions stay pinned and cannot match until smoke clears. Rune goals count on clearing smoke. Levels 31–50 introduce connected corner-cut and side-notch masks. Five chapters use uploaded location backgrounds with chapter transitions. Portrait touch screens use a vertical field, goals, moves, boosters and result/shop panels. Preview unlocks all 50 levels; production progression stays gated.

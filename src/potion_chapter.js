@@ -18,6 +18,28 @@ function install(){
  if(p.__potionChapter)return true;p.__potionChapter=true;
  const baseInit=p.init;
  p.init=function(d){baseInit.call(this,d);this.cfg={...this.cfg,bg:'location_'+(Math.floor((this.no-1)/10)%5)}};
+ const basePick=p.pickBooster;
+ p.pickBooster=function(id){this.keyMode=false;this.refreshKeys();return basePick.call(this,id)};
+ const baseTap=p.tap;
+ p.unlockChain=async function(r,c){
+  const ce=this.cell[r][c];if(this.busy||ce.block!=='chain'||this.levelKeys<=0)return false;
+  this.busy=true;this.levelKeys--;this.keyMode=false;this.boosterMode=null;this.unselect();this.hideHint();
+  ce.block=null;this.bumpGoal('chain',null,1);this.fx.spark?.();this.render(r,c);
+  await this.resolve();this.busy=false;this.updateHud();this.refreshKeys();this.endCheck();this.scheduleHint();return true;
+ };
+ p.tap=function(r,c){if(this.keyMode){if(!this.busy)this.unlockChain(r,c);return}return baseTap.call(this,r,c)};
+ p.refreshKeys=function(){this.keyLabel?.setText('КЛЮЧ · '+this.levelKeys+(this.keyMode?' ✓':''))};
+ p.chainControls=function(){
+  if(!this.cfg.chains?.length)return;
+  const x=PORTRAIT?300:1640,y=PORTRAIT?1650:870;
+  button(this,x,y,'',()=>{if(this.busy)return;this.keyMode=!this.keyMode;this.boosterMode=null;this.unselect();this.refreshKeys()},PORTRAIT?390:330);
+  this.keyLabel=this.children.list[this.children.list.length-1];
+  button(this,PORTRAIT?795:1640,PORTRAIT?1650:1000,'+ КЛЮЧ · 40 монет',()=>{
+   if(this.busy)return;
+   if(Campaign.buyKey()){this.levelKeys++;this.updateHud();this.refreshKeys()}
+   else this.boosterHint?.setText('Для покупки ключа нужно 40 монет');
+  },PORTRAIT?440:400);this.refreshKeys();
+ };
  const desktopHud=p.hud;
  p.hud=function(){
   if(!PORTRAIT)return desktopHud.call(this);
@@ -44,7 +66,7 @@ function install(){
   const step=620/Math.max(1,this.goals.length);
   this.gt=this.goals.map((goal,i)=>{
    const x=440-310+step*(i+.5);
-   const key=goal.type==='berry'?'b_'+goal.id:goal.type==='ice'?'ice1':goal.type==='acorn'?'acorn':goal.type==='roots'?'roots':'ui_coin';
+   const key=goal.type==='berry'?'b_'+goal.id:goal.type==='ice'?'ice1':goal.type==='acorn'?'acorn':goal.type==='roots'?'roots':goal.type==='chain'?'chain':'ui_coin';
    fit(this.add.image(x-44,315,key),66,66).setDepth(5);
    return title(this,x+35,315,'',27,'#513724');
   });
@@ -110,9 +132,9 @@ function install(){
  }
  const baseCreate=p.create;
  p.create=function(){
-  baseCreate.call(this);if(!this.attemptId||!this.scene.isActive())return;
+  baseCreate.call(this);if(!this.attemptId||!this.scene.isActive())return;this.chainControls();
   if(this.no>=31){
-   const hint=title(this,PORTRAIT?650:960,PORTRAIT?1710:980,'Руна загорается рядом с совпадением.\nДым исчезнет за 3 следующих хода.',PORTRAIT?25:23);
+   const hint=title(this,PORTRAIT?650:960,PORTRAIT?1740:980,this.cfg.chains?.length?'Нажми «КЛЮЧ», затем клетку с цепью.\nБесплатные ключи выданы на этот уровень.':'Руна загорается рядом с совпадением.\nДым исчезнет за 3 следующих хода.',PORTRAIT?25:23);
    hint.setWordWrapWidth(PORTRAIT?560:620);hint.setAlpha(.95);
   }
  };

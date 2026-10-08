@@ -466,7 +466,7 @@ function install(){
     const slots=[.39,.56,.73];
     this.gt=this.goals.map((goal,index)=>{
       const y=goalsPanel.y+(slots[index]-.5)*goalsPanel.displayHeight;
-      const key=goal.type==='berry'?'b_'+goal.id:goal.type==='ice'?'ice1':goal.type==='acorn'?'acorn':goal.type==='roots'?'roots':'ui_coin';
+      const key=goal.type==='berry'?'b_'+goal.id:goal.type==='ice'?'ice1':goal.type==='acorn'?'acorn':goal.type==='roots'?'roots':goal.type==='chain'?'chain':'ui_coin';
       fit(this.add.image(goalsPanel.x-.16*goalsPanel.displayWidth,y,key),72,72).setDepth(5);
       const value=label(goalsPanel.x+.16*goalsPanel.displayWidth,y,'',27,'#57301d');
       return value;
