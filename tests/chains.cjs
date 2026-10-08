@@ -11,6 +11,11 @@ const mem={};const api=create({getItem:k=>mem[k],setItem:(k,v)=>mem[k]=v});
 assert.equal(api.buyKey(),false);const token=api.begin(1);api.win(token);
 const coins=api.read().coins;assert.equal(api.buyKey(),true);assert.equal(api.read().coins,coins-40);
 const src=fs.readFileSync('src/potion_chapter.js','utf8');
+const createBody=src.split('p.create=function(){')[1].split('\n };')[0];
+let controls=0;
+const createScene=new Function('baseCreate','title','PORTRAIT','return function(){'+createBody+'}')(()=>{},()=>{},false);
+createScene.call({attemptId:1,no:1,scene:{isActive:()=>false},chainControls(){controls++}});
+assert.equal(controls,1,'key controls must be created before the scene is active');
 const body=src.split('p.unlockChain=async function(r,c){')[1].split('\n };')[0];
 const unlock=new (Object.getPrototypeOf(async function(){}).constructor)('r','c',body);
 (async()=>{
