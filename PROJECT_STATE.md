@@ -1,3 +1,41 @@
+## 2026-10-09: Closed doors replace chains
+
+User rejected chains and keys. Removed all chain goals, key buttons and key purchases. Levels 41–50 instead contain 1–4 permanent closed cupboard doors. Their cells contain no potion, cannot swap or match, stay fixed during gravity, shuffle and special hits, and do not consume a booster when tapped. Door taps shake the sprite and briefly show «Скоро». Gifts and opening are deliberately not implemented yet. Existing root/ice/crystal goals remain achievable, with connected authored masks.
+
+Asset: assets/blockers/door_closed.png, a transparent generated dark walnut door with a thin gold frame and small violet padlock. ImageGen prompt: one square front-view magical cupboard door, no chains, keys, potions or text. Runtime sprite optimized to 256 pixels. Mobile remains portrait.
+
+Validation: doors.cjs checks connected layouts, removal of chain goals and key economy, empty door cells, special-hit and booster protection; campaign and potion-chapter tests pass.
+
+## 2026-10-08: Chains in chapter five
+
+Levels 41–50 add 1–4 chains over pinned potions, outside holes and other blockers. Each attempt receives one free key per chain. Select KEY and tap a chained cell: consume exactly one level key, preserve the potion, count the chain goal and resolve any resulting matches without consuming a move. Other boosters and special hits cannot remove chains. Extra keys cost 40 game coins, charged only on a successful purchase; keys are for the current attempt. Portrait and desktop controls are provided. Mobile layout is always portrait.
+
+Validation: chains.cjs covers key economy, layout overlap, one-time unlock, potion preservation and special-hit protection; campaign, potion-chapter and special-label-lifecycle checks pass.
+
+## 2026-10-08: Rune smoke, chapters and portrait play
+
+Rune ignites on an adjacent match, transforms into a potion covered by the drawn smoke, and clears after three valid moves. Hidden potions stay pinned and cannot match until smoke clears. Rune goals count on clearing smoke. Levels 31–50 introduce connected corner-cut and side-notch masks. Five chapters use uploaded location backgrounds with chapter transitions. Portrait touch screens use a vertical field, goals, moves, boosters and result/shop panels. Preview unlocks all 50 levels; production progression stays gated.
+
+Validation: campaign, special-label-lifecycle, rewarded-guard and potion-chapter tests; JavaScript syntax checks; optimized release build.
+
+## Подключение прозрачного UI — 08.10.2026
+- Игровой HUD использует отдельные PNG assets/ui/potion: квадратная рамка, панели целей/ходов, плашка ресурсов, кнопка бустера и рубиновое сердце.
+- Подложка и клетки рисуются Phaser отдельно от рамки; все надписи и счётчики — кодом.
+- Кот заменяет короля во всех его текстурных состояниях; пень и декоративная королевская семья убраны с игрового HUD.
+- Лёгкое покачивание/дыхание и реакции на совпадения сохранены. Старое процедурное моргание короля отключено: к коту не подходит.
+- Горизонтальная раскладка подключена. Портретный мобильный HUD ещё не реализован; PNG goals-mobile-panel подготовлен и загружается.
+- Механика руны/дыма, цепи/ключи и смена локаций пока остаются дальнейшими задачами.
+
+## Решение по руне и дыму — 08.10.2026
+- Первое соседнее совпадение активирует руну: коротко показываем горящий спрайт.
+- Затем только клетка руны превращается в зелье под рисованным дымом smog_1/2/3.
+- Дым рассеивается за три успешных хода; ход активации не считается. Остальное поле не затрагивается.
+- Предложение на обсуждение: главы по 10 уровней со сменой карты; ключ за обычные монеты, один ключ снимает цепи с одной клетки; первый ключ бесплатный. Экономика и новые уровни ещё не согласованы и не реализованы.
+- Голубая колба: сохранить силуэт ромба, увести грани в бирюзовый. Правка изображения ещё не выполнена.
+
+## 2026-10-08 — кристалл с тремя стадиями
+Кристалл имеет 3 HP, один удар за волну совпадений/спецэффекта или молотка. Цель засчитывается только после полного разрушения. Спрайты 3hp/2hp/1hp, единый холст и масштаб; размер блокеров увеличен до 98% клетки. Руны остаются одноударными. Цепи пока не подключены.
+
 # PROJECT_STATE — «Зельеварня чудес»
 
 **Дата старта:** 2026-09-23  
@@ -6,6 +44,18 @@
 **Первая платформа:** Яндекс Игры  
 **Технология:** Phaser 3 / HTML5 / JavaScript  
 **Форматы:** mobile 9:16 (ориентир 1080×1920) + ПК 16:9 (ориентир 1920×1080)
+
+## 2026-10-07 — первая интеграция ассетов поля
+
+Ветка `potion-first-field`: подключены 6 реторт, 4 спецфишки, 3 бустера, фон pk_level_2, кабинет pk_cab и карта pk_map. Существующие технические ключи сохранены для совместимости с кампанией. Release allowlist обновлён. Старые картинки сохранены.
+
+Это промежуточная проверочная версия: панели, логотип, персонаж и попапы ещё от исходной игры; портретная компоновка пока не реализована. Не отправлять в модерацию.
+
+Блокеры: для проверки существующих механик `runa` заменяет roots (отдельная клетка, соседние матчи), `kristal` заменяет acorn (отдельная клетка). Ice/ice_hard подключены к двум слоям льда. Цепи и туман пока не подключены: цепям нужна механика фиксации фишки; стадиям тумана — отдельная модель повреждения. Сами ледяные картинки почти непрозрачны; необходимо проверить читаемость реторты и отличимость двух стадий на реальном поле, прежде чем утверждать арт.
+
+Туман smog_1/2/3 выглядит слишком похоже для уверенного чтения оставшихся ударов: рекомендуются различия плотности/силуэта плюс небольшой индикатор слоёв. Цепи не использовать как глухой блокер, поскольку рисунок явно подразумевает объект под цепями.
+
+Проверки: JS syntax, campaign, rewarded-guard, special-label-lifecycle — PASS; release builder — PASS. tests/release.cjs падает на сравнении Promise в рекламном guard и на неизменённом origin/main. Browser QA не выполнена: Chromium недоступен в окружении. Следом — визуальная проверка поля/льда, исправление UI, portrait layout, отдельная реализация цепей/тумана.
 
 ## 1. ЦЕЛЬ ПРОЕКТА
 
