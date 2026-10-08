@@ -2,7 +2,7 @@
 'use strict';
 
 const MOBILE_LAYOUT=!!(window.matchMedia?.('(pointer: coarse)').matches||window.navigator?.maxTouchPoints>0);
-const PORTRAIT=MOBILE_LAYOUT&&window.innerHeight>window.innerWidth;
+const PORTRAIT=MOBILE_LAYOUT;
 const W=PORTRAIT?1080:1920,H=PORTRAIT?1920:1080,R=8,C=8;
 const FONT='Arial Rounded MT Bold, Trebuchet MS, Arial, sans-serif';
 const CELL=PORTRAIT?112:MOBILE_LAYOUT?110:96,BX=(W-C*CELL)/2,BY=PORTRAIT?450:MOBILE_LAYOUT?130:150;
