@@ -15,6 +15,7 @@ OUTPUT = ROOT / os.environ.get("BERRIES_RELEASE_NAME", "berries_yandex_v6.zip")
 MANIFEST = ROOT / "berries_build_manifest.json"
 
 RUNTIME_FILES = [
+    "src/potion_chapter.js",
     "index.html",
     "styles.css",
     "assets/map-digits.css",
@@ -28,31 +29,57 @@ RUNTIME_FILES = [
 ]
 
 ASSET_FILES = [
-    "assets/backgrounds/background_game_forest.jpg",
-    "assets/backgrounds/background_title_forest.jpg",
-    "assets/map/map_forest_background.jpg",
+    "assets/blockers/door_closed.png",
+    "assets/backgrounds/pk_level_4.jpg",
+    "assets/backgrounds/pk_level_5.jpg",
+    "assets/backgrounds/pk_level_6.jpg",
+    "assets/backgrounds/pk_level_7.jpg",
+    "assets/backgrounds/mob_level_4.jpg",
+    "assets/backgrounds/mob_level_5.jpg",
+    "assets/backgrounds/mob_level_6.jpg",
+    "assets/backgrounds/mob_level_7.jpg",
+    "assets/backgrounds/mob_level_2.jpg",
+    "assets/blockers/runa_burning.png",
+    "assets/blockers/smog_1.png",
+    "assets/blockers/smog_2.png",
+    "assets/blockers/smog_3.png",
+
+    "assets/ui/potion/cat-idle.png",
+    "assets/ui/potion/moves-panel.png",
+    "assets/ui/potion/life-heart.png",
+    "assets/ui/potion/goals-mobile-panel.png",
+    "assets/ui/potion/board-frame.png",
+    "assets/ui/potion/resource-plaque.png",
+    "assets/ui/potion/goals-panel.png",
+    "assets/ui/potion/booster-button.png",
+
+    "assets/backgrounds/pk_level_2.jpg",
+    "assets/backgrounds/pk_cab.jpg",
+    "assets/backgrounds/pk_map.jpg",
     "assets/map/map_header_levels.png",
-    "assets/berries/berry_blackberry.png",
-    "assets/berries/berry_blueberry.png",
-    "assets/berries/berry_cloudberry.png",
-    "assets/berries/berry_gooseberry.png",
-    "assets/berries/berry_raspberry.png",
-    "assets/berries/berry_strawberry.png",
-    "assets/blockers/blocker_ice_1.png",
-    "assets/blockers/blocker_ice_2.png",
-    "assets/blockers/blocker_roots.png",
-    "assets/blockers/goal_acorn.png",
-    "assets/boosters/booster_fan.png",
-    "assets/boosters/booster_hammer.png",
-    "assets/boosters/booster_shuffle.png",
+    "assets/berries/retorta_star.png",
+    "assets/berries/retorta_moon.png",
+    "assets/berries/retorta_sun.png",
+    "assets/berries/retorta_flora.png",
+    "assets/berries/retorta_air.png",
+    "assets/berries/retorta_fire.png",
+    "assets/blockers/ice.png",
+    "assets/blockers/ice_hard.png",
+    "assets/blockers/runa.png",
+    "assets/blockers/crystal_3hp.png",
+    "assets/blockers/crystal_2hp.png",
+    "assets/blockers/crystal_1hp.png",
+    "assets/boosters/talisman.png",
+    "assets/boosters/molotok.png",
+    "assets/boosters/vihr.png",
     "assets/characters/king/king_celebrate.png",
     "assets/characters/king/king_idle.png",
     "assets/characters/king/king_point.png",
     "assets/characters/king/king_sad.png",
-    "assets/specials/special_bomb.png",
-    "assets/specials/special_line_h.png",
-    "assets/specials/special_line_v.png",
-    "assets/specials/special_rainbow.png",
+    "assets/specials/bomb.png",
+    "assets/specials/pulya_goriz.png",
+    "assets/specials/pulya_vertik.png",
+    "assets/specials/amulet.png",
     "assets/ui/buttons/button_wood.png",
     "assets/ui/buttons/button_royal_family_soon.png",
     "assets/ui/decor/hero_stump_forest.png",
@@ -132,6 +159,8 @@ def copy_one(rel):
     shutil.copy2(src, dst)
 
 def target_for(rel, size):
+    if rel.startswith("assets/ui/potion/"):
+        return {"cat-idle.png": (512,512), "life-heart.png": (192,192), "booster-button.png": (256,256), "moves-panel.png": (256,256), "resource-plaque.png": (512,192), "goals-panel.png": (512,768), "goals-mobile-panel.png": (768,256), "board-frame.png": (1024,1024)}.get(Path(rel).name, size)
     if rel.startswith(("assets/berries/", "assets/blockers/", "assets/boosters/", "assets/specials/")):
         return (256, 256)
     if rel.startswith("assets/characters/king/"):
@@ -153,12 +182,13 @@ def resize_to_fit(image, target):
 def optimize_images():
     for rel in ASSET_FILES:
         path = RELEASE / rel
-        with Image.open(path) as im:
+        with Image.open(ROOT / rel) as im:
             if path.suffix.lower() in {".jpg", ".jpeg"}:
                 # Full-screen backgrounds remain 1920x1080; only excess pixels/metadata are removed.
-                im = im.convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
+                im = im.convert("RGB").resize((1080,1920) if "/mob_" in rel else (1920,1080), Image.Resampling.LANCZOS)
                 im.save(path, "JPEG", quality=82, optimize=True, progressive=True)
             else:
+                im.load()
                 im = resize_to_fit(im, target_for(rel, im.size))
                 im.save(path, "PNG", optimize=True, compress_level=9)
 
